@@ -1,4 +1,6 @@
-﻿public static class ComplexStack {
+﻿using Microsoft.VisualBasic;
+public static class ComplexStack {
+  
     public static bool DoSomethingComplicated(string line) {
         var stack = new Stack<char>();
         foreach (var item in line) {
@@ -22,3 +24,4 @@
         return stack.Count == 0;
     }
 }
+

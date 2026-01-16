@@ -1,4 +1,4 @@
-﻿/// <summary>
+﻿﻿/// <summary>
 /// Maintain a Customer Service Queue.  Allows new customers to be 
 /// added and allows customers to be serviced.
 /// </summary>
@@ -11,24 +11,63 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Add customer and serve customer
+        // Expected Result: Display the customer that was added
         Console.WriteLine("Test 1");
+        var service = new CustomerService(4);
+        service.AddNewCustomer();
+        service.ServeCustomer();
 
-        // Defect(s) Found: 
+        // Defect(s) Found: Index was out of range because I was removing the customer before getting it, so I fixed the order of those two operations
 
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Add two customers and serve them in order
+        // Expected Result: Display customers in the order they were added, first in, first out 
         Console.WriteLine("Test 2");
+        service = new CustomerService(4);
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        Console.WriteLine($"Before serving customers: {service}");
+        service.ServeCustomer();
+        service.ServeCustomer();
+        Console.WriteLine($"After serving customers: {service}");
 
-        // Defect(s) Found: 
+
+        // Defect(s) Found: None  
 
         Console.WriteLine("=================");
 
         // Add more Test Cases As Needed Below
+        // Test 3
+        // Scenario: Try to serve a customer when there are no customers
+        // Expected Result: Display an error message
+        Console.WriteLine("Test 3");
+        service = new CustomerService(4);
+        service.ServeCustomer();
+        // Defect(s) Found: Needed to check the length of the queue before serving a customer to avoid errors
+
+        Console.WriteLine("=================");
+        // Test 4
+        // Scenario: Try to add more customers than the max queue size
+        // Expected Result: Display an error message when trying to add the 3rd customer
+        Console.WriteLine("Test 4");
+        service = new CustomerService(2);
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        service.AddNewCustomer();
+        Console.WriteLine($"Service Queue: {service}");
+        // Defect(s) Found: Needed to do >= instead of > when checking the length of the queue in AddNewCustomer
+
+        Console.WriteLine("=================");
+        //Test 5
+        // Scenario: Enforce max queue to 10 when given invalid size
+        // Expected Result: Max queue size should be 10
+        Console.WriteLine("Test 5");
+        service = new CustomerService(-5);
+        Console.WriteLine($"Max Queue Size: {service}");
+        // Defect(s) Found: none
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,7 +106,8 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        //if (_queue.Count > _maxSize) { // Defect 3 - should use >=
+        if (_queue.Count >= _maxSize) {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
@@ -88,9 +128,19 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
-        _queue.RemoveAt(0);
+        // Defect-2 Check if there are customers in the queue, if not display message.
+        if (_queue.Count == 0) {
+            Console.WriteLine("No Customers in Queue.");
+            
+        }
+        else {
+        /*_queue.RemoveAt(0);
+        var customer = _queue[0];*/ 
+        // Fixed the order of these two operations, so first get the customer then remove it from the queue
         var customer = _queue[0];
+        _queue.RemoveAt(0);
         Console.WriteLine(customer);
+        }
     }
 
     /// <summary>
