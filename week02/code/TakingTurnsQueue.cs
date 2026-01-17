@@ -40,11 +40,39 @@ public class TakingTurnsQueue
         else
         {
             Person person = _people.Dequeue();
-            if (person.Turns > 1)
+            /*if (person.Turns > 1)
             {
                 person.Turns -= 1;
                 _people.Enqueue(person);
+            }*/
+            /*if (person.Turns > 0)
+            
+            {
+                person.Turns -= 1;
             }
+            if (person.Turns != 0)
+            {
+                _people.Enqueue(person);
+            }*/
+            // Fixed defect where infinite turns were being decremented
+            if (person.Turns > 0)
+            {
+                person.Turns -= 1;
+                if (person.Turns != 0)
+                {
+                    _people.Enqueue(person);
+                }
+            }
+            else
+            {
+                // Infinite turns case
+                _people.Enqueue(person);
+            }
+
+            // Defect was here, not removing person with more than zero turns ones their turns reached zero
+
+            
+          
 
             return person;
         }
