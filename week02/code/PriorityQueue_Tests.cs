@@ -32,6 +32,12 @@ public class PriorityQueueTests
         priorityQueue.Enqueue("laptop", 8);
         var result = priorityQueue.Dequeue();
         Assert.AreEqual("laptop", result);
+       // continue dequeuing to verify the order
+        result = priorityQueue.Dequeue();
+        Assert.AreEqual("book", result);
+        result = priorityQueue.Dequeue();
+        Assert.AreEqual("pen", result);
+
     }
 
     // Add more test cases as needed below.

@@ -1,6 +1,6 @@
 using System;
 
-public class Program
+public class Program 
 {
     static void Main(string[] args)
     {
@@ -10,6 +10,8 @@ public class Program
 
         Console.WriteLine("Hello Sandbox World!");
         //QueueTests.Run();
+        SetHashing.Run();
+
         
     }
 }
