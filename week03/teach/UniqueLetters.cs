@@ -8,6 +8,12 @@
 
         var test3 = "";
         Console.WriteLine(AreUniqueLetters(test3)); // Expect True because its an empty string
+
+        Console.WriteLine("---- Alternate Implementation ----");
+        
+        Console.WriteLine(AreUniqueLetters_Alternate(test1)); // Expect True because all letters unique
+        Console.WriteLine(AreUniqueLetters_Alternate(test2)); // Expect False because 'a' is repeated
+        Console.WriteLine(AreUniqueLetters_Alternate(test3)); // Expect True because its an empty string
     }
 
     /// <summary>Determine if there are any duplicate letters in the text provided</summary>
@@ -15,14 +21,34 @@
     /// <returns>true if all letters are unique, otherwise false</returns>
     private static bool AreUniqueLetters(string text) {
         // TODO Problem 1 - Replace the O(n^2) algorithm to use sets and O(n) efficiency
-        for (var i = 0; i < text.Length; ++i) {
+        /*for (var i = 0; i < text.Length; ++i) {
             for (var j = 0; j < text.Length; ++j) {
                 // Don't want to compare to yourself ... that will always result in a match
                 if (i != j && text[i] == text[j])
                     return false;
             }
+        }*/
+        var letters = new HashSet<char>();
+        for (var i = 0; i < text.Length; ++i) {
+            if (letters.Contains(text[i])) {
+                return false;
+            }
+            letters.Add(text[i]);
         }
+        //using sets to minimize time complexity to O(n)
 
+
+        return true;
+    }
+
+    private static bool AreUniqueLetters_Alternate(string text) {
+        var letters = new HashSet<char>();
+        foreach (var letter in text) {
+            letters.Add(letter);
+        }
+        if (letters.Count != text.Length) {
+            return false;
+        }
         return true;
     }
 }

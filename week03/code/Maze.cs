@@ -33,6 +33,22 @@ public class Maze
     public void MoveLeft()
     {
         // FILL IN CODE
+        var currentLocation = (X: _currX, Y: _currY);
+        if (_mazeMap.TryGetValue(currentLocation, out var directions))
+        {
+            if (directions[0]) // left
+            {
+                _currX--;
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -42,6 +58,22 @@ public class Maze
     public void MoveRight()
     {
         // FILL IN CODE
+        var currentLocation = (X: _currX, Y: _currY);
+        if (_mazeMap.TryGetValue(currentLocation, out var directions))
+        {
+            if (directions[1]) // right
+            {
+                _currX++;
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -51,6 +83,23 @@ public class Maze
     public void MoveUp()
     {
         // FILL IN CODE
+        var currentLocation = (X: _currX, Y: _currY);
+        if (_mazeMap.TryGetValue(currentLocation, out var directions))
+        {
+            if (directions[2]) // up
+            {
+                //_currY++;
+                _currY--;   // FIXED defect - Y coordinate increases downwards
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -60,6 +109,23 @@ public class Maze
     public void MoveDown()
     {
         // FILL IN CODE
+        var currentLocation = (X: _currX, Y: _currY);
+        if (_mazeMap.TryGetValue(currentLocation, out var directions))
+        {
+            if (directions[3]) // down
+            {
+                //_currY--;
+                _currY++;   // FIXED defect - Y coordinate increases downwards
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     public string GetStatus()

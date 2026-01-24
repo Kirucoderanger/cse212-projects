@@ -40,6 +40,7 @@
      * <param name="text">Text to check for duplicate letters</param>
      * <returns>true if all letters are unique, otherwise false</returns>
      */
+    
     private static bool AreUniqueLettersAlternate(string text)
     {
         var unique = new HashSet<char>(text);
