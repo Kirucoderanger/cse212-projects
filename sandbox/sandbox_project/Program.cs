@@ -10,7 +10,8 @@ public class Program
 
         Console.WriteLine("Hello Sandbox World!");
         //QueueTests.Run();
-        SetHashing.Run();
+        //SetHashing.Run();
+        RecursionExamples.Run();
 
         
     }

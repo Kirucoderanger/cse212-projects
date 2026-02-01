@@ -15,7 +15,12 @@ public static class Recursion
     public static int SumSquaresRecursive(int n)
     {
         // TODO Start Problem 1
-        return 0;
+        // Base case
+        // when n is less than or equal to 0, return 0
+        if (n <= 0)
+            return 0;
+        return (n * n) + SumSquaresRecursive(n - 1);
+        
     }
 
     /// <summary>
@@ -40,6 +45,39 @@ public static class Recursion
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
         // TODO Start Problem 2
+        // this method performance is O(n!) because the number of permutations of a string of length n is n!
+
+        // base case
+        // when the word length matches the desired size, add to results
+        // if the size is 1, just add each letter to results
+        // check thr size is between 1 and length of letters
+        // if the current word length matches the desired size, add to results
+        if (word.Length == size)
+        {
+            results.Add(word);
+        }
+        else
+        {
+            for (var i = 0; i < letters.Length; i++)
+            {
+                // Make a copy of the letters to pass to the
+                // the next call to permutations.  We need
+                // to remove the letter we just added before
+                // we call permutations again.
+                var lettersLeft = letters.Remove(i, 1);
+
+                // Add the new letter to the word we have so far
+                PermutationsChoose(results, lettersLeft, size, word + letters[i]);
+            }
+        }
+
+        // the performance is O(n!) because the number of permutations of a string of length n is n!
+        // also, the function makes recursive calls reducing the problem size each time until reaching the base case.
+        // thus, the overall time complexity is dominated by the number of permutations generated.
+        // space complexity is O(n) due to the recursion stack and temporary strings created during the process.
+        // alternately we can enhance the performance by using backtracking to avoid creating new strings at each step.
+        // the backtracking approach would modify the letters in place and revert changes after recursive calls.
+        // however, this would require a different data structure (like a char array) to allow in-place modifications.
     }
 
     /// <summary>
@@ -87,7 +125,7 @@ public static class Recursion
     public static decimal CountWaysToClimb(int s, Dictionary<int, decimal>? remember = null)
     {
         // Base Cases
-        if (s == 0)
+        /*if (s == 0)
             return 0;
         if (s == 1)
             return 1;
@@ -100,7 +138,31 @@ public static class Recursion
 
         // Solve using recursion
         decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        return ways;*/
+        // base cases
+        if (s == 0)
+            return 1; // There's one way to stay at the ground (do nothing)
+        if (s < 0)
+            return 0; // No way to climb negative stairs
+
+        // Initialize the memoization dictionary on the first call
+        if (remember == null)
+        {
+            remember = new Dictionary<int, decimal>();
+        }
+        // If we've already computed the value for 's', return it from the dictionary
+        if (remember.ContainsKey(s))
+        {
+            return remember[s];
+        }
+        // Compute the value recursively and store it in the dictionary
+        decimal ways = CountWaysToClimb(s - 1, remember) + CountWaysToClimb(s - 2, remember) + CountWaysToClimb(s - 3, remember);
+        remember[s] = ways;
         return ways;
+        // The performance of this memoized version is O(s) because each value from 0 to s is computed only once and stored for future reference.
+        // The space complexity is also O(s) due to the storage of computed values in the dictionary.
+        // Without memoization, the performance would be exponential O(3^s) due to the overlapping subproblems in the recursive calls.
+        // Thus, memoization significantly improves efficiency for larger values of 's'.
     }
 
     /// <summary>
@@ -119,6 +181,33 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        // base case
+        //if the string is empty, add to results
+        if (pattern == "")
+        {
+            results.Add(pattern);
+            return;
+        }
+        // if there are no wildcards left in the pattern, add it to results
+        // find the index of the first wildcard
+        int wildcardIndex = pattern.IndexOf('*');
+        if (wildcardIndex == -1)
+        {
+            results.Add(pattern);
+        }
+        else
+        {
+            // replace the wildcard with '0' and recurse
+            string patternWithZero = pattern.Substring(0, wildcardIndex) + '0' + pattern.Substring(wildcardIndex + 1);
+            WildcardBinary(patternWithZero, results);
+
+            // replace the wildcard with '1' and recurse
+            string patternWithOne = pattern.Substring(0, wildcardIndex) + '1' + pattern.Substring(wildcardIndex + 1);
+            WildcardBinary(patternWithOne, results);
+        }
+        // The performance of this function is O(2^m), where m is the number of wildcards in the pattern.
+        // This is because each wildcard can be replaced by either '0' or '1', leading to an exponential number of combinations.
+        // The space complexity is also O(2^m) due to the storage of all possible binary strings in the results list.
     }
 
     /// <summary>
@@ -133,10 +222,47 @@ public static class Recursion
             currPath = new List<ValueTuple<int, int>>();
         }
         
-        // currPath.Add((1,2)); // Use this syntax to add to the current path
+        // Add current position to the path
+        currPath.Add((x, y));
 
         // TODO Start Problem 5
         // ADD CODE HERE
+        // Check if we have reached the end
+        if (maze.IsEnd(x, y))
+        {
+            results.Add(currPath.AsString());
+            // Backtrack: remove the current position before returning
+            currPath.RemoveAt(currPath.Count - 1);
+            return;
+        }
+        // Explore possible moves: right, down, left, up
+        var directions = new List<ValueTuple<int, int>>()
+        {
+            (1, 0), // right
+            (0, 1), // down
+            (-1, 0), // left
+            (0, -1) // up
+        };
+        foreach (var (dx, dy) in directions)
+        {
+            int newX = x + dx;
+            int newY = y + dy;
+            // Check if the move is valid
+            if (maze.IsValidMove(currPath, newX, newY))
+            {
+                // Recurse with the new position
+                SolveMaze(results, maze, newX, newY, currPath);
+            }
+        }
+        // Backtrack: remove the current position before returning
+        currPath.RemoveAt(currPath.Count - 1);
+
+        // The performance of this function is O(4^(n^2)) in the worst case, where n is the dimension of the maze.
+        // This is because from each cell, there are up to 4 possible directions to explore, and in the worst case, we may need to explore all cells in the maze.
+        // However, the actual performance may be better due to the constraints imposed by walls and already visited cells.
+        // The space complexity is O(n^2) due to the recursion stack and the storage of the current path.
+      
+
 
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
