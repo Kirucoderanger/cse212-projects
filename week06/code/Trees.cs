@@ -49,5 +49,23 @@ public static class Trees
     private static void InsertMiddle(int[] sortedNumbers, int first, int last, BinarySearchTree bst)
     {
         // TODO Start Problem 5
+        // Base case: if the range is invalid, return
+        if (first > last)
+        {
+            return;
+        }
+        // Find the middle index
+        int middle = first + (last - first) / 2;
+        // Insert the middle element into the BST
+        bst.Insert(sortedNumbers[middle]);
+        // Recursively insert elements in the left half
+        InsertMiddle(sortedNumbers, first, middle - 1, bst);
+        // Recursively insert elements in the right half
+        InsertMiddle(sortedNumbers, middle + 1, last, bst);
+
+        // The time complexity of this function is O(n log n) because we are inserting n elements into the BST, and each insertion takes O(log n) time on average. The space complexity is O(log n) due to the recursive call stack in the worst case (when the tree is completely unbalanced).
+        // The space complexity can degrade to O(n) in the worst case when the tree is completely unbalanced, but since we are creating a balanced BST, the space complexity will be O(log n).
+        // The function correctly creates a balanced BST because it always inserts the middle element of the current range first, ensuring that the tree remains balanced as elements are added.
+        // The function does not create new sub-lists, as it uses the first and last indices to determine the range of elements to consider for insertion, thus avoiding unnecessary list slicing and additional space usage.
     }
 }
